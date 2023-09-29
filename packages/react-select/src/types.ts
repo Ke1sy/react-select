@@ -160,13 +160,32 @@ export interface InitialInputFocusedActionMeta<Option, IsMulti extends boolean>
   options?: Options<Option>;
 }
 
+// export interface InitialInputFocusedAfterClearActionMeta<
+//   Option,
+//   IsMulti extends boolean
+// > extends ActionMetaBase<Option> {
+//   action: 'initial-input-focus-after-remove-value';
+//   removedValues: Options<Option>;
+//   value: OnChangeValue<Option, IsMulti>;
+//   options?: Options<Option>;
+// }
+
+export interface InitialInputFocusedAfterClearActionMeta<Option>
+  extends Omit<RemoveValueActionMeta<Option>, 'action'> {
+  action: 'initial-input-focus-after-remove-value';
+  // removedValues: Options<Option>;
+  // value: OnChangeValue<Option, IsMulti>;
+  // options?: Options<Option>;
+}
+
 export type ActionMeta<Option> =
   | SelectOptionActionMeta<Option>
   | DeselectOptionActionMeta<Option>
   | RemoveValueActionMeta<Option>
   | PopValueActionMeta<Option>
   | ClearActionMeta<Option>
-  | CreateOptionActionMeta<Option>;
+  | CreateOptionActionMeta<Option>
+  | InitialInputFocusedAfterClearActionMeta<Option>;
 
 export type SetValueAction = 'select-option' | 'deselect-option';
 

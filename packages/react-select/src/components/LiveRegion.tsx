@@ -73,6 +73,7 @@ const LiveRegion = <
   // Update aria live selected option when prop changes
   const ariaSelected = useMemo(() => {
     let message = '';
+    console.log('ariaSelection', ariaSelection);
     if (ariaSelection && messages.onChange) {
       const {
         option,

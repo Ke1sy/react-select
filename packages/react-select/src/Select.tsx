@@ -765,20 +765,46 @@ export default class Select<
     let hasKeptFocus = isFocused && prevWasFocused;
 
     if (isFocused && !hasKeptFocus) {
+      const isFocusedAfterClearIndicatorMouseDown =
+        ariaSelection?.action === 'clear' ||
+        ariaSelection?.action === 'remove-value';
+      console.log('ariaSelection', ariaSelection);
+      console.log('1');
       // If `value` or `defaultValue` props are not empty then announce them
       // when the Select is initially focused
+
       newAriaSelection = {
         value: valueTernary(isMulti, selectValue, selectValue[0] || null),
         options: selectValue,
         action: 'initial-input-focus',
       };
 
+      if (!isFocusedAfterClearIndicatorMouseDown) {
+        newAriaSelection = {
+          value: valueTernary(isMulti, selectValue, selectValue[0] || null),
+          options: selectValue,
+          action: 'initial-input-focus',
+        };
+      } else {
+        if (ariaSelection?.action === 'clear') {
+          newAriaSelection = ariaSelection;
+        } else if (ariaSelection?.action === 'remove-value') {
+          newAriaSelection = {
+            ...ariaSelection,
+            action: 'initial-input-focus-after-remove-value',
+          };
+        }
+      }
+
       hasKeptFocus = !prevWasFocused;
     }
 
-    // If the 'initial-input-focus' action has been set already
+    // If the 'initial-input-focus' or 'initial-input-focus-after-clear' action has been set already
     // then reset the ariaSelection to null
-    if (ariaSelection?.action === 'initial-input-focus') {
+    if (
+      ariaSelection?.action === 'initial-input-focus' ||
+      ariaSelection?.action === 'initial-input-focus-after-remove-value'
+    ) {
       newAriaSelection = null;
     }
 

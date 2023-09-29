@@ -6,6 +6,7 @@ import {
   OnChangeValue,
   Options,
   OptionsOrGroups,
+  MultiValue,
 } from '../types';
 
 export type OptionContext = 'menu' | 'value';
@@ -127,18 +128,34 @@ export const defaultAriaLiveMessages = {
   onChange: <Option, IsMulti extends boolean>(
     props: AriaOnChangeProps<Option, IsMulti>
   ) => {
-    const { action, label = '', labels, isDisabled } = props;
+    const { action, label = '', labels, isDisabled, value } = props;
     switch (action) {
       case 'deselect-option':
       case 'pop-value':
       case 'remove-value':
+        console.log('props remove-value', props);
+
         return `option ${label}, deselected.`;
       case 'clear':
+        console.log('props clear', props);
+
         return 'All selected options have been cleared.';
       case 'initial-input-focus':
+        console.log('props initial-input-focus', props);
+
         return `option${labels.length > 1 ? 's' : ''} ${labels.join(
           ','
         )}, selected.`;
+      case 'initial-input-focus-after-remove-value':
+        console.log('props initial-input-focus-after-remove-value', props);
+
+        const selecetedValuesPart = (value as MultiValue<Option>).length
+          ? `${(value as MultiValue<Option>).length} option${
+              (value as MultiValue<Option>).length > 1 ? 's' : ''
+            } selected.`
+          : 'All selected options have been cleared.';
+
+        return `option ${label}, deselected. ${selecetedValuesPart}`;
       case 'select-option':
         return isDisabled
           ? `option ${label} is disabled. Select another option.`
